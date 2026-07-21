@@ -14,6 +14,18 @@
   --aviso: #8a6d00;
   --aviso-bg: #fff6d6;
   --sombra: 0 12px 34px rgba(11, 20, 26, .18);
+
+  /* Identidade CAEMA — usada na moldura da pagina (fundo, cabecalho).
+     O interior do celular continua na paleta do WhatsApp. */
+  --marca: #0284c7;
+  --marca-escura: #0369a1;
+  --marca-suave: rgba(2, 132, 199, .1);
+  --pagina-bg: #eef6fb;
+  --pagina-borda: rgba(2, 132, 199, .18);
+  --pagina-texto: #122235;
+  --pagina-fraco: #60758a;
+  --brilho-1: rgba(14, 165, 233, .16);
+  --brilho-2: rgba(56, 189, 248, .12);
 }
 
 * { box-sizing: border-box; }
@@ -21,10 +33,14 @@
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg);
-  color: var(--texto);
-  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--pagina-texto);
+  font: 15px/1.5 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Mesmo fundo da tela de entrada, para o sistema parecer um so. */
+  background:
+    radial-gradient(circle at 10% 10%, var(--brilho-1), transparent 34rem),
+    radial-gradient(circle at 90% 90%, var(--brilho-2), transparent 30rem),
+    var(--pagina-bg);
 }
 
 .palco {
@@ -273,21 +289,41 @@ body {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 14px 22px;
-  background: var(--superficie);
-  border-bottom: 1px solid var(--borda);
+  padding: 13px 24px;
+  /* Vidro sobre o gradiente, como o painel do login */
+  background: rgba(255, 255, 255, .88);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--pagina-borda);
+}
+
+.topo-marca { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+.topo-logo {
+  width: 104px; max-height: 38px;
+  object-fit: contain; object-position: left center;
+  filter: drop-shadow(0 8px 18px rgba(2, 132, 199, .14));
+  flex: none;
+}
+
+.topo-marca-texto {
+  display: flex; flex-direction: column;
+  padding-left: 14px;
+  border-left: 1px solid var(--pagina-borda);
+  min-width: 0;
 }
 
 .topo-marca h1 {
   margin: 0;
-  font-size: 17px; font-weight: 700;
-  letter-spacing: -.01em;
-  color: var(--texto);
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 17px; font-weight: 800;
+  letter-spacing: -.03em;
+  color: var(--pagina-texto);
 }
 .topo-marca p {
-  margin: 2px 0 0;
-  color: var(--texto-fraco);
-  font-size: 12.5px;
+  margin: 1px 0 0;
+  color: var(--marca-escura);
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .12em;
 }
 
 /* min-width:0 + wrap: sem os dois, este bloco não encolhe abaixo do próprio
@@ -300,7 +336,7 @@ body {
 }
 
 .topo-email {
-  color: var(--texto-fraco);
+  color: var(--pagina-fraco);
   font-size: 12.5px;
   max-width: 260px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -309,7 +345,7 @@ body {
 /* Substitui a faixa amarela: os números continuam sinalizados como fictícios,
    sem ocupar uma tarja no topo da página. */
 .selo-exemplo {
-  padding: 4px 9px;
+  padding: 4px 10px;
   border: 1px solid #e4d089;
   border-radius: 999px;
   background: var(--aviso-bg);
@@ -322,17 +358,17 @@ body {
 .botao-sair {
   display: inline-flex; align-items: center; gap: 7px;
   min-height: 40px;
-  padding: 9px 15px;
-  border: 1px solid var(--borda); border-radius: 9px;
+  padding: 9px 16px;
+  border: 1px solid var(--pagina-borda); border-radius: 10px;
   background: transparent;
-  color: var(--texto);
-  font: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--marca-escura);
+  font: inherit; font-size: 13.5px; font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
 }
-.botao-sair:hover { background: #fdf0ee; border-color: #c0392b; color: #c0392b; }
-.botao-sair:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.botao-sair:hover { background: var(--marca-suave); border-color: var(--marca); }
+.botao-sair:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
 .botao-sair[hidden] { display: none; }
 
 /* ============================================ confirmação de saída ======= */
@@ -394,9 +430,11 @@ body {
 }
 
 @media (max-width: 620px) {
-  .topo { padding: 12px 16px; gap: 10px; }
-  .topo-marca h1 { font-size: 16px; }
-  .topo-marca p { font-size: 11.5px; }
+  .topo { padding: 11px 14px; gap: 10px; }
+  .topo-logo { width: 78px; max-height: 30px; }
+  .topo-marca-texto { padding-left: 11px; }
+  .topo-marca h1 { font-size: 15px; }
+  .topo-marca p { font-size: 10px; letter-spacing: .1em; }
   /* No celular o que precisa estar visível é o botão de sair, não o e-mail. */
   .topo-email { display: none; }
   .palco { padding: 16px 12px 24px; }
