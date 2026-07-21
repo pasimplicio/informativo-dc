@@ -24,6 +24,24 @@ autenticação estiver ativa (ver Roteiro).
 | `app.js` | Carrega o JSON, renderiza a marcação do WhatsApp (`*negrito*`) |
 | `dados/mensagens.json` | Conteúdo exibido — o que o n8n atualiza |
 | `gerar.js` | Ferramenta de dev; gera o JSON a partir dos workflows |
+| `login.html` | Tela de entrada, identidade visual do Portal CAEMA |
+| `auth.css` / `auth.js` | Estilo e comportamento do login |
+
+## Tela de login
+
+Reproduz a identidade do portal (`portal/auth-local/public/`), mas com **Google
+no lugar de e-mail e senha** — só o tema claro, coerente com o resto do app.
+
+O login **ainda não funciona**: depende de uma credencial OAuth que não existe
+(o `portal/auth/` do repositório interno tem apenas o preparo, nunca ativado).
+Por isso `auth.js` consulta `/api/auth/status` e, enquanto a rota não responder
+`{ "configurado": true }`, mantém o botão desabilitado com o aviso na tela, em
+vez de mandar o usuário para uma rota inexistente.
+
+Quando a Fase 1 subir, a mesma tela passa a funcionar sem alteração.
+
+O botão do Google usa fundo branco e borda cinza porque as diretrizes de marca
+do Google exigem — não trocar pelo azul da CAEMA.
 
 Deep link por indicador: `#arrecadacao`, `#faturamento`, `#cortes`, `#ordens`.
 

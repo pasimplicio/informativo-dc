@@ -1,0 +1,152 @@
+/* Tela de login — identidade visual do Portal CAEMA (auth-local/public/auth.css).
+   Aqui só o tema claro, coerente com o restante do Informativo DC. */
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: light;
+  --brand: #0284c7;
+  --brand-dark: #0369a1;
+  --brand-soft: rgba(2, 132, 199, .1);
+  --bg: #eef6fb;
+  --surface: #ffffff;
+  --border: rgba(2, 132, 199, .18);
+  --text: #122235;
+  --muted: #60758a;
+  --danger: #be123c;
+  --shadow: 0 24px 70px rgba(15, 53, 82, .14);
+  --body-glow-1: rgba(14, 165, 233, .16);
+  --body-glow-2: rgba(56, 189, 248, .12);
+  --panel: rgba(255, 255, 255, .88);
+  --label: #31475b;
+  --accent: #0369a1;
+  --security: #075985;
+  --footer: #7b8fa2;
+  --logo-filter: drop-shadow(0 10px 24px rgba(2, 132, 199, .12));
+}
+
+html { font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+body {
+  min-height: 100dvh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 10% 10%, var(--body-glow-1), transparent 34rem),
+    radial-gradient(circle at 90% 90%, var(--body-glow-2), transparent 30rem),
+    var(--bg);
+}
+
+button { cursor: pointer; font: inherit; }
+
+.auth-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(340px, 1fr) minmax(420px, 560px);
+}
+
+/* ---------------------------------------------------------------- marca --- */
+
+.auth-brand {
+  padding: clamp(2rem, 7vw, 7rem);
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.auth-brand::after {
+  content: "";
+  position: absolute;
+  width: 440px; height: 440px;
+  right: -180px; bottom: -190px;
+  border: 1px solid rgba(2, 132, 199, .14);
+  border-radius: 50%;
+  box-shadow: 0 0 0 70px rgba(14, 165, 233, .03), 0 0 0 140px rgba(14, 165, 233, .02);
+}
+
+.brand-logo {
+  width: 160px; max-height: 64px;
+  object-fit: contain; object-position: left center;
+  margin-bottom: 3.2rem;
+  filter: var(--logo-filter);
+}
+.brand-eyebrow {
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: .72rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .18em;
+}
+.auth-brand h1 {
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  line-height: 1.02; letter-spacing: -.055em;
+  max-width: 760px;
+}
+.auth-brand h1 span { color: #0ea5e9; }
+.auth-brand p {
+  max-width: 620px; margin-top: 1.4rem;
+  color: var(--muted); font-size: 1.03rem; line-height: 1.8;
+}
+.brand-security {
+  display: flex; align-items: center; gap: .7rem;
+  margin-top: 2.2rem;
+  color: var(--security); font-size: .82rem; font-weight: 700;
+}
+.brand-security svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+/* ---------------------------------------------------------------- painel --- */
+
+.auth-panel {
+  background: var(--panel);
+  backdrop-filter: blur(24px);
+  border-left: 1px solid var(--border);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-card { width: min(100%, 430px); }
+.auth-card-header { margin-bottom: 2rem; }
+.auth-card-header h2 {
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 1.85rem; letter-spacing: -.035em;
+}
+.auth-card-header p { margin-top: .65rem; color: var(--muted); line-height: 1.6; font-size: .9rem; }
+
+/* Botão do Google: fundo branco e borda cinza são exigência das diretrizes de
+   marca do Google para o botão de login — não trocar pela cor da marca CAEMA. */
+.button-google {
+  display: flex; align-items: center; justify-content: center; gap: .7rem;
+  width: 100%; height: 48px;
+  border: 1px solid #dadce0; border-radius: 14px;
+  background: #fff; color: #3c4043;
+  font-size: .92rem; font-weight: 700;
+  transition: background .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.button-google:hover { background: #f8f9fa; box-shadow: 0 2px 6px rgba(60, 64, 67, .18); }
+.button-google:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.button-google:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+.button-google svg { flex: none; }
+
+.field-hint { font-size: .72rem; color: var(--muted); line-height: 1.6; }
+.hint-centro { margin-top: 1.2rem; text-align: center; }
+
+.auth-message {
+  display: none;
+  margin-bottom: 1rem;
+  padding: .85rem 1rem;
+  border: 1px solid; border-radius: 13px;
+  font-size: .78rem; line-height: 1.5;
+}
+.auth-message.visible { display: block; }
+.auth-message.error { background: rgba(190, 18, 60, .07); border-color: rgba(190, 18, 60, .22); color: #9f1239; }
+.auth-message.warning { background: rgba(180, 83, 9, .07); border-color: rgba(180, 83, 9, .22); color: #92400e; }
+
+.auth-footer { margin-top: 2rem; text-align: center; font-size: .68rem; color: var(--footer); }
+
+/* ------------------------------------------------------------ responsivo --- */
+
+@media (max-width: 900px) {
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-brand { padding: 2.5rem 1.5rem 1rem; }
+  .auth-brand::after { display: none; }
+  .auth-brand h1 { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+  .auth-brand p { font-size: .95rem; line-height: 1.65; }
+  .brand-logo { margin-bottom: 2rem; }
+  .auth-panel { border-left: 0; border-top: 1px solid var(--border); }
+}
