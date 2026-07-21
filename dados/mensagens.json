@@ -1,0 +1,38 @@
+{
+  "exemplo": true,
+  "atualizado_em": "2026-07-20T21:00:00-03:00",
+  "contatos": [
+    {
+      "id": "arrecadacao",
+      "nome": "Arrecadação",
+      "inicial": "AR",
+      "horarios": "10h e 16h",
+      "gerado_em": "2026-07-20T16:15:00-03:00",
+      "mensagem": "📊 *ARRECADAÇÃO | POSIÇÃO 00/00/0000*\nReferência: *MÊS DE EXEMPLO*\nAtualização: 00/00/0000, 00:00\nCalendário da meta: *00 dias úteis*\n\nArrecadação do dia: *R$0,0mi*\nPrevisto diário útil: *R$0,0mi*\nResultado diário: *000,0%*\nArrecadação acumulada: *R$00,0mi*\nMeta mensal: *R$00,0mi*\nAtingimento da meta: *00,0%*\n\n🎯 *Como estamos:*\nEste é um texto de demonstração. Os valores acima são fictícios e servem apenas para mostrar o formato do informativo. Os números reais são publicados pela automação após a autenticação estar ativa.\n\n🔝 *Top regionais no dia:*\n1. REGIONAL EXEMPLO A - Previsto útil: R$0,0mi | Realizado: *R$0,0mi* | +0,0%\n2. REGIONAL EXEMPLO B - Previsto útil: R$0,0mi | Realizado: *R$0,0mi* | +0,0%\n\n⚠️ *Destaques:*\n- Maior superação no dia: *REGIONAL EXEMPLO A (+0,0%)*\n- Maior déficit diário: *REGIONAL EXEMPLO C (R$0,0mil)*\n\nEsta análise foi elaborada pela ASSESSORIA DA DIRETORIA COMERCIAL com apoio de automações. Apesar do cuidado na geração das informações, recomenda-se verificar dados críticos antes de tomar decisões importantes."
+    },
+    {
+      "id": "faturamento",
+      "nome": "Faturamento",
+      "inicial": "FT",
+      "horarios": "21h",
+      "gerado_em": "2026-07-20T21:09:00-03:00",
+      "mensagem": "📄 *FATURAMENTO E PAGAMENTOS | POSIÇÃO 00/00/0000*\nReferência: *MÊS DE EXEMPLO*\nAtualização: 00/00/0000, 00:00\n\nFaturado no ciclo: *R$00,0mi* — 000.000 faturas\n\n📅 *Vencimentos do ciclo*\nMÊS A: *R$00,0mi* (000.000 faturas)\nMÊS B: *R$0,0mi* (00.000 faturas)\n\n💠 *Situação do faturado*\n🟢 Pago em dia (até o vencimento): *R$0,0mi* — 0,0%\n🟡 Pago com atraso: *R$000,0mil* — 0,0%\n🔴 Vencido e não pago: *R$0,0mi* — 0,0%\n⚪ Ainda a vencer: *R$00,0mi* — 00,0%\n\nEste é um texto de demonstração. Os valores são fictícios.\n\nEsta análise foi elaborada pela ASSESSORIA DA DIRETORIA COMERCIAL com apoio de automações."
+    },
+    {
+      "id": "cortes",
+      "nome": "Cortes",
+      "inicial": "CO",
+      "horarios": "21h",
+      "gerado_em": "2026-07-20T21:01:00-03:00",
+      "mensagem": "✂️ *ACOMPANHAMENTO DE CORTES | POSIÇÃO 00/00/0000*\nReferência: *MÊS DE EXEMPLO*\nAtualização: 00/00/0000, 00:00\n\nOrdens de corte emitidas: *0.000*\nCortes realizados: *0.000*\nEficiência geral de corte: *00,0%*\nValor cobrado: *R$0,0mi*\nValor pago total: *R$000,0mil*\nRecebimento total: *00,0%*\n\n🎯 *Como estamos:*\nEste é um texto de demonstração. Os valores acima são fictícios e servem apenas para mostrar o formato do informativo.\n\n📍 *Eficiência de cortes por regional:*\nREGIONAL EXEMPLO A - Emitidas: 000 | Realizadas: 000 | *00,0%*\nREGIONAL EXEMPLO B - Emitidas: 000 | Realizadas: 000 | *00,0%*\n\n⚠️ *Destaques:*\n- Melhor eficiência: *REGIONAL EXEMPLO A (00,0%)*\n- Menor eficiência: *REGIONAL EXEMPLO B (00,0%)*\n\nEsta análise foi elaborada pela ASSESSORIA DA DIRETORIA COMERCIAL com apoio de automações."
+    },
+    {
+      "id": "ordens",
+      "nome": "Ordens de Serviço",
+      "inicial": "OS",
+      "horarios": "20h",
+      "gerado_em": "2026-07-20T20:00:00-03:00",
+      "mensagem": "📊 *ORDENS COMERCIAIS | POSIÇÃO 00/00/0000*\nReferência: *MÊS DE EXEMPLO*\nAtualização: 00/00/0000, 00:00\n\nOS emitidas: *00.000*\nOS encerradas: *0.000*\nOS pendentes: *0.000*\nDentro do SLA de 72h: *00,0%*\n\n🎯 *Como estamos:*\nEste é um texto de demonstração. Os valores acima são fictícios e servem apenas para mostrar o formato do informativo.\n\n📍 *Desempenho por regional:*\nREGIONAL EXEMPLO A - Encerradas: 000 | No prazo: *00,0%*\nREGIONAL EXEMPLO B - Encerradas: 000 | No prazo: *00,0%*\n\nEsta análise foi elaborada pela ASSESSORIA DA DIRETORIA COMERCIAL com apoio de automações."
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+/* Informativo DC — visual do WhatsApp, tema claro (tema único). */
+
+:root {
+  --bg: #e8eaed;
+  --wa-fundo: #efe7dd;      /* papel de parede da conversa */
+  --wa-topo: #f0f2f5;       /* barras */
+  --superficie: #ffffff;
+  --borda: #e0e2e5;
+  --texto: #111b21;
+  --texto-fraco: #667781;
+  --acento: #008069;        /* verde WhatsApp */
+  --acento-claro: #dcf8c6;
+  --balao: #d9fdd3;         /* balão enviado */
+  --aviso: #8a6d00;
+  --aviso-bg: #fff6d6;
+  --sombra: 0 12px 34px rgba(11, 20, 26, .18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--texto);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.faixa {
+  padding: 9px 16px;
+  background: var(--aviso-bg);
+  color: var(--aviso);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.palco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px 36px;
+}
+
+/* ------------------------------------------------------------ aparelho --- */
+
+.celular {
+  width: 390px;
+  height: 820px;
+  max-width: 100%;
+  max-height: calc(100dvh - 72px);
+  min-height: 560px;
+  padding: 12px;
+  border-radius: 46px;
+  background: linear-gradient(160deg, #3a444d, #171d22 62%);
+  box-shadow: var(--sombra), inset 0 0 0 1px rgba(255, 255, 255, .08);
+  position: relative;
+}
+.celular::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: 21px;
+  width: 118px; height: 4px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, .5);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.celular-tela {
+  position: relative;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  background: var(--wa-fundo);
+}
+
+.tela {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--wa-fundo);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform .26s cubic-bezier(.32, .72, 0, 1), visibility .26s;
+}
+.tela-ativa { transform: translateX(0); visibility: visible; }
+.tela-atras { transform: translateX(-24%); visibility: visible; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tela { transition: none; }
+}
+
+/* --------------------------------------------------------------- barras --- */
+
+.wa-topo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 26px 12px 14px;  /* respiro superior = área do notch */
+  background: var(--wa-topo);
+  border-bottom: 1px solid var(--borda);
+  flex: none;
+}
+.wa-topo-lista { justify-content: space-between; }
+.wa-titulo { font-size: 19px; font-weight: 700; color: var(--texto); }
+.wa-topo-icones { display: flex; gap: 16px; color: var(--texto-fraco); fill: currentColor; }
+
+.wa-voltar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 44px;
+  margin-left: -6px;
+  border: 0; background: transparent; color: var(--texto);
+  cursor: pointer;
+}
+.wa-voltar:focus-visible,
+.conversa:focus-visible,
+.thread:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: -2px;
+}
+
+.wa-topo-info { display: flex; flex-direction: column; min-width: 0; }
+.wa-topo-nome { font-size: 15.5px; font-weight: 600; }
+.wa-topo-sub { font-size: 12px; color: var(--texto-fraco); }
+
+.avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--acento);
+  color: #fff;
+  font-size: 14px; font-weight: 700;
+  flex: none;
+}
+.avatar-pequeno { width: 36px; height: 36px; font-size: 11.5px; }
+
+/* ---------------------------------------------------------------- lista --- */
+
+.conversas {
+  list-style: none; margin: 0; padding: 0;
+  overflow-y: auto; flex: 1;
+  background: var(--superficie);
+}
+
+.conversa {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 12px;
+  min-height: 76px;
+  border: 0; border-bottom: 1px solid var(--borda);
+  background: transparent; color: inherit;
+  text-align: left; font: inherit;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.conversa:hover, .conversa:active { background: #f5f6f6; }
+
+/* display:block + min-width:0 sao necessarios: sem eles os spans ficam inline,
+   nao encolhem no flex e o ellipsis nunca dispara -- o texto vaza da moldura. */
+.conversa-corpo { display: block; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.conversa-linha { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.conversa-nome {
+  display: block; min-width: 0;
+  font-size: 15.5px; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.conversa-hora { font-size: 11.5px; color: var(--texto-fraco); flex: none; }
+.conversa-previa {
+  display: block;
+  margin-top: 3px;
+  max-width: 100%;
+  font-size: 13.5px; color: var(--texto-fraco);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.atualizado {
+  margin: 0;
+  padding: 12px;
+  background: var(--superficie);
+  border-top: 1px solid var(--borda);
+  color: var(--texto-fraco);
+  font-size: 11.5px;
+  text-align: center;
+  flex: none;
+}
+
+/* --------------------------------------------------------------- thread --- */
+
+.thread {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 10px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+  background-color: var(--wa-fundo);
+  background-image:
+    radial-gradient(circle at 18% 26%, rgba(11,20,26,.028) 0 2px, transparent 2px),
+    radial-gradient(circle at 72% 68%, rgba(11,20,26,.028) 0 2px, transparent 2px);
+  background-size: 92px 92px, 134px 134px;
+}
+
+.dia {
+  align-self: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 1px 1px rgba(11, 20, 26, .1);
+  color: var(--texto-fraco);
+  font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+}
+
+.balao {
+  align-self: flex-end;
+  max-width: 88%;
+  padding: 8px 10px 6px;
+  border-radius: 10px 2px 10px 10px;
+  background: var(--balao);
+  color: var(--texto);
+  font-size: 13.5px; line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  box-shadow: 0 1px 1px rgba(11, 20, 26, .13);
+}
+.balao b { font-weight: 700; }
+.balao code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+.balao-rodape {
+  display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+  margin-top: 3px;
+  font-size: 10.5px;
+  color: var(--texto-fraco);
+}
+.balao-rodape svg { fill: #53bdeb; }
+
+.aviso-thread {
+  align-self: center;
+  max-width: 90%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(11, 20, 26, .1);
+  color: var(--texto-fraco);
+  font-size: 12.5px; text-align: center;
+}
+
+.wa-barra-entrada {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 28px;
+  background: var(--wa-topo);
+  flex: none;
+}
+.wa-campo {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--texto-fraco);
+  font-size: 13.5px;
+}
+.wa-enviar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--acento);
+  color: #fff;
+  flex: none;
+}
+
+/* ----------------------------------------------------------- responsivo --- */
+
+@media (max-width: 480px) {
+  .palco { padding: 0; }
+  .celular {
+    width: 100%; height: 100dvh; max-height: none;
+    padding: 0; border-radius: 0;
+  }
+  .celular::after { display: none; }
+  .celular-tela { border-radius: 0; }
+  .wa-topo { padding-top: max(18px, env(safe-area-inset-top)); }
+  .wa-barra-entrada { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+}

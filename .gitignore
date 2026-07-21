@@ -1,0 +1,17 @@
+# DADO REAL NUNCA VAI AO GIT.
+# O site em producao recebe as mensagens via POST /api/publicar; o arquivo
+# abaixo e so a saida local do gerar.js, para conferencia na maquina de dev.
+dados/mensagens.local.json
+dados/*.local.json
+
+# Saidas antigas do gerador (formato anterior)
+mensageiros.gen.js
+snapshot.gen.js
+
+node_modules/
+.vercel/
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
