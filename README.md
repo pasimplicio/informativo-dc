@@ -6,6 +6,14 @@ apresentados no visual de um celular com WhatsApp.
 Site estático. Não calcula nada e não acessa banco: consome
 `dados/mensagens.json`, publicado pelas automações do n8n.
 
+## Endereço
+
+Produção: **https://informativo-dc.sistemaspsdev.com.br**
+
+O domínio `*.vercel.app` gerado automaticamente continua respondendo, mas o
+endereço acima é o oficial — é o que vai nos alertas e o que precisa constar
+como origem autorizada no OAuth.
+
 ## Estado atual
 
 Os dados no repositório são **de demonstração** — números fictícios, marcados
@@ -91,6 +99,19 @@ node gerar.js     # escreve dados/mensagens.local.json (~9 KB, fora do git)
 - [ ] **Fase 3** — imagem estática + link substituindo o texto no alerta
 
 ### Notas de implementação das próximas fases
+
+**Credencial OAuth — o que pedir ao admin do Google Workspace.** Cliente OAuth
+2.0 do tipo *Aplicativo da Web*, num projeto da organização CAEMA, com a tela de
+consentimento marcada como **Interna** (sendo interna, só contas do domínio
+conseguem sequer autenticar — a restrição vem do Workspace, não do app):
+
+| Campo | Valor |
+|---|---|
+| Origem JavaScript autorizada | `https://informativo-dc.sistemaspsdev.com.br` |
+| URI de redirecionamento autorizada | `https://informativo-dc.sistemaspsdev.com.br/api/auth/callback/google` |
+
+O Client Secret vai em variável de ambiente na Vercel — **nunca** neste
+repositório, que é público.
 
 **Autenticação.** Restringir por domínio exige validação **no servidor**:
 `hd=caema.ma.gov.br` no pedido ao Google é só dica de interface e pode ser
