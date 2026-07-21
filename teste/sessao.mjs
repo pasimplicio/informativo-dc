@@ -1,4 +1,4 @@
-import { assinar, verificar, ehDominioPermitido, lerCookie, montarCookie }
+import { assinar, verificar, ehDominioPermitido, lerCookie, montarCookie, TIPO }
   from '../lib/sessao.js';
 
 const S = 'segredo-de-teste-nao-usado-em-producao';
@@ -65,6 +65,27 @@ ok('cookie ausente vira null', lerCookie('a=1', 'sessao') === null);
 const c = montarCookie('valor');
 ok('cookie tem HttpOnly/Secure/SameSite', /HttpOnly/.test(c) && /Secure/.test(c) && /SameSite=Lax/.test(c));
 ok('cookie de logout zera Max-Age', /Max-Age=0/.test(montarCookie('', { apagar: true })));
+
+// 9. State — o token do fluxo OAuth NAO carrega e-mail.
+//    A ausencia destes testes deixou passar um bug que rejeitava todo login
+//    valido: verificar() aplicava a checagem de dominio tambem no state.
+const st = await assinar({ destino: '/informativo', aleatorio: 'abc' }, S, TIPO.state);
+const stv = await verificar(st, S, TIPO.state);
+ok('state valido e aceito sem e-mail', stv && stv.destino === '/informativo');
+ok('state nao expira de imediato', stv && stv.exp > Date.now() / 1000);
+
+// 10. Confusao de tipos: um nao pode ser usado no lugar do outro
+ok('sessao recusada como state', (await verificar(t, S, TIPO.state)) === null);
+ok('state recusado como sessao', (await verificar(st, S, TIPO.sessao)) === null);
+ok('tipo ausente e recusado', (await (async () => {
+  const enc2 = new TextEncoder();
+  const corpo2 = Buffer.from(JSON.stringify({
+    email: 'x@caema.ma.gov.br', exp: Math.floor(Date.now() / 1000) + 600,
+  })).toString('base64url');
+  const k2 = await crypto.subtle.importKey('raw', enc2.encode(S), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const m2 = Buffer.from(await crypto.subtle.sign('HMAC', k2, enc2.encode(corpo2))).toString('base64url');
+  return verificar(corpo2 + '.' + m2, S, TIPO.sessao);
+})()) === null);
 
 console.log(falhas ? '\n' + falhas + ' FALHA(S)' : '\nTodos os testes passaram.');
 process.exit(falhas ? 1 : 0);

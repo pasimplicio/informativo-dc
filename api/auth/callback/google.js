@@ -1,6 +1,6 @@
 import {
   assinar, verificar, montarCookie, lerCookie,
-  ehDominioPermitido, configurado, ENV, DOMINIO_PERMITIDO,
+  ehDominioPermitido, configurado, ENV, DOMINIO_PERMITIDO, TIPO,
 } from '../../../lib/sessao.js';
 
 /**
@@ -73,7 +73,8 @@ export default async function handler(req, res) {
 
   const sessao = await assinar(
     { email: String(id.email).toLowerCase(), nome: id.name || null },
-    segredo
+    segredo,
+    TIPO.sessao
   );
 
   res.setHeader('Set-Cookie', [
@@ -85,9 +86,9 @@ export default async function handler(req, res) {
 }
 
 async function verificarState(state, segredo) {
-  // O state usa o mesmo formato da sessao, mas com validade propria curta
-  // garantida pelo Max-Age do cookie.
-  return verificar(state, segredo);
+  // Exige TIPO.state: um cookie de sessao apresentado como state (ou o
+  // contrario) e recusado, mesmo tendo assinatura valida.
+  return verificar(state, segredo, TIPO.state);
 }
 
 function decodificarJWT(jwt) {

@@ -1,4 +1,4 @@
-import { assinar, configurado, ENV, DOMINIO_PERMITIDO } from '../../lib/sessao.js';
+import { assinar, configurado, ENV, DOMINIO_PERMITIDO, TIPO } from '../../lib/sessao.js';
 
 /** Inicia o fluxo OAuth: leva o usuario ao consentimento do Google. */
 export default async function handler(req, res) {
@@ -13,7 +13,8 @@ export default async function handler(req, res) {
   // sem isso, um terceiro consegue disparar o callback (CSRF de login).
   const state = await assinar(
     { destino, aleatorio: crypto.randomUUID() },
-    process.env[ENV.segredoSessao]
+    process.env[ENV.segredoSessao],
+    TIPO.state
   );
 
   const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
