@@ -134,11 +134,14 @@
 
     estado.contatos = Array.isArray(dados.contatos) ? dados.contatos : [];
 
-    if (dados.exemplo) $('#aviso-exemplo').hidden = false;
+    // Sem a faixa amarela, o selo no cabeçalho é o que impede números
+    // fictícios de passarem por reais.
+    if (dados.exemplo) $('#selo-exemplo').hidden = false;
 
-    $('#atualizado').textContent = dados.atualizado_em
+    const quando = dados.atualizado_em
       ? 'Atualizado em ' + dataLonga(dados.atualizado_em) + ' às ' + hora(dados.atualizado_em)
       : '';
+    if (quando) $('#topo-meta').textContent = 'Diretoria Comercial · CAEMA — ' + quando.toLowerCase();
 
     pintarLista();
 
