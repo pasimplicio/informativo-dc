@@ -32,7 +32,11 @@
 
 body {
   margin: 0;
-  min-height: 100dvh;
+  /* height (não min-height): a porcentagem de altura do aparelho só resolve
+     se houver altura definida na cadeia até ele. */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
   color: var(--pagina-texto);
   font: 15px/1.5 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -47,17 +51,21 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px 16px 36px;
+  /* flex:1 + min-height:0 fazem o palco ocupar exatamente a sobra do
+     cabeçalho. Sem isso, 100dvh no aparelho estoura a página e corta a base. */
+  flex: 1;
+  min-height: 0;
+  padding: 24px 16px 30px;
 }
 
 /* ------------------------------------------------------------ aparelho --- */
 
 .celular {
-  width: 390px;
+  /* Ocupa o espaço disponível sem passar do tamanho de um aparelho real.
+     A moldura é preservada em toda largura -- ela é o formato do produto. */
+  width: min(390px, 100%);
   height: 820px;
-  max-width: 100%;
-  max-height: calc(100dvh - 96px);
-  min-height: 560px;
+  max-height: 100%;
   padding: 12px;
   border-radius: 46px;
   background: linear-gradient(160deg, #3a444d, #171d22 62%);
@@ -269,15 +277,21 @@ body {
 /* ----------------------------------------------------------- responsivo --- */
 
 @media (max-width: 480px) {
-  .palco { padding: 0; }
-  .celular {
-    width: 100%; height: 100dvh; max-height: none;
-    padding: 0; border-radius: 0;
-  }
-  .celular::after { display: none; }
-  .celular-tela { border-radius: 0; }
-  .wa-topo { padding-top: max(18px, env(safe-area-inset-top)); }
-  .wa-barra-entrada { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+  .palco { padding: 12px 10px 16px; }
+  /* A moldura encolhe junto -- antes ela era removida aqui, e o aparelho
+     perdia o formato justamente no celular, que é o uso principal. */
+  .celular { padding: 8px; border-radius: 36px; }
+  .celular::after { bottom: 15px; width: 96px; }
+  .celular-tela { border-radius: 29px; }
+  .wa-topo { padding-top: 18px; }
+  .wa-barra-entrada { padding-bottom: 16px; }
+}
+
+@media (max-width: 380px) {
+  .palco { padding: 8px 6px 12px; }
+  .celular { padding: 6px; border-radius: 30px; }
+  .celular-tela { border-radius: 25px; }
+  .celular::after { bottom: 11px; width: 82px; height: 3px; }
 }
 
 
