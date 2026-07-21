@@ -37,13 +37,11 @@ body {
 /* ------------------------------------------------------------ aparelho --- */
 
 .celular {
-  /* Sem altura fixa: o aparelho encolhe até o conteúdo. Com poucas conversas,
-     820px deixavam quase metade da tela em branco. */
   width: 390px;
+  height: 820px;
   max-width: 100%;
-  min-height: 560px;                    /* espaço de leitura para a conversa */
-  max-height: calc(100dvh - 72px);
-  display: flex;
+  max-height: calc(100dvh - 96px);
+  min-height: 560px;
   padding: 12px;
   border-radius: 46px;
   background: linear-gradient(160deg, #3a444d, #171d22 62%);
@@ -64,14 +62,15 @@ body {
 
 .celular-tela {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
   border-radius: 36px;
   overflow: hidden;
   background: var(--wa-fundo);
 }
 
 .tela {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   background: var(--wa-fundo);
@@ -79,11 +78,6 @@ body {
   visibility: hidden;
   transition: transform .26s cubic-bezier(.32, .72, 0, 1), visibility .26s;
 }
-
-/* A lista fica no fluxo e é ela quem dá altura ao aparelho; a conversa
-   sobrepõe. Com as duas absolutas, o container não teria altura própria. */
-#tela-lista { position: relative; }
-#tela-conversa { position: absolute; inset: 0; }
 .tela-ativa { transform: translateX(0); visibility: visible; }
 .tela-atras { transform: translateX(-24%); visibility: visible; }
 
@@ -406,4 +400,16 @@ body {
   /* No celular o que precisa estar visível é o botão de sair, não o e-mail. */
   .topo-email { display: none; }
   .palco { padding: 16px 12px 24px; }
+}
+
+/* Rodapé da lista: ancora a base do aparelho e evita o vazio solto. */
+.atualizado {
+  margin: 0;
+  padding: 12px;
+  background: var(--superficie);
+  border-top: 1px solid var(--borda);
+  color: var(--texto-fraco);
+  font-size: 11.5px;
+  text-align: center;
+  flex: none;
 }

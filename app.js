@@ -141,7 +141,7 @@
     const quando = dados.atualizado_em
       ? 'Atualizado em ' + dataLonga(dados.atualizado_em) + ' às ' + hora(dados.atualizado_em)
       : '';
-    if (quando) $('#topo-meta').textContent = 'Diretoria Comercial · CAEMA — ' + quando.toLowerCase();
+    $('#atualizado').textContent = quando;
 
     pintarLista();
 
