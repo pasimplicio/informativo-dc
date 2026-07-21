@@ -94,6 +94,15 @@ cópia (`WF*-INFO`) que lê o JSON já gravado em `csv/` em vez de reconsultar o
 GSAN — evita carga dupla e garante que os dois falem o mesmo número, dado que
 execuções do GSAN em horários diferentes podem trazer totais diferentes.
 
+## vercel.json
+
+`/dados/` vai com `Cache-Control: no-store`. O JSON é reescrito a cada execução
+do n8n; com o cache padrão do CDN, a tela continuaria mostrando o informativo do
+dia anterior por horas — falha silenciosa, sem erro nenhum aparente.
+
+O schema da Vercel rejeita propriedades extras nas regras de `headers`, então
+não dá para deixar comentários (`"//"`) dentro do arquivo.
+
 ## Rodar local
 
 ```powershell

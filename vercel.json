@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
-      "//": "O JSON e reescrito a cada execucao do n8n; cache do CDN faria a tela mostrar o informativo de ontem.",
       "source": "/dados/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-store, must-revalidate" }
