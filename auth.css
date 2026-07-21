@@ -137,6 +137,26 @@ button { cursor: pointer; font: inherit; }
 .auth-message.error { background: rgba(190, 18, 60, .07); border-color: rgba(190, 18, 60, .22); color: #9f1239; }
 .auth-message.warning { background: rgba(180, 83, 9, .07); border-color: rgba(180, 83, 9, .22); color: #92400e; }
 
+/* Acesso a demonstracao — visivel so enquanto o OAuth nao esta publicado. */
+.demo-link {
+  margin-top: 1.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.demo-link a {
+  color: var(--accent);
+  font-size: .82rem; font-weight: 800;
+  text-decoration: none;
+}
+.demo-link a:hover { text-decoration: underline; }
+.demo-nota {
+  display: block;
+  margin-top: .3rem;
+  color: var(--muted);
+  font-size: .68rem;
+}
+
 .auth-footer { margin-top: 2rem; text-align: center; font-size: .68rem; color: var(--footer); }
 
 /* ------------------------------------------------------------ responsivo --- */

@@ -23,7 +23,7 @@
   function proximoDestino() {
     const p = new URLSearchParams(location.search).get('next');
     // So caminhos internos: evita virar redirecionador aberto para outro site.
-    return p && p.startsWith('/') && !p.startsWith('//') ? p : '/';
+    return p && p.startsWith('/') && !p.startsWith('//') ? p : '/informativo';
   }
 
   async function verificarDisponibilidade() {
@@ -40,6 +40,10 @@
         'Enquanto isso, o informativo exibe dados de demonstração.',
         'warning'
       );
+      // Sem isto a tela de entrada nao levaria a lugar nenhum enquanto o
+      // OAuth nao existe. Some sozinho quando a autenticacao entrar.
+      const demo = document.getElementById('acessoDemo');
+      if (demo) demo.hidden = false;
     }
   }
 
