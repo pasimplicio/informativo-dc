@@ -48,6 +48,21 @@
     return c.publicado_em || c.gerado_em;
   }
 
+  /**
+   * Aceita os dois formatos: contato com "historico" (publicado pelo n8n) e
+   * contato com "mensagem" única (arquivo de exemplo). Assim a tela funciona
+   * antes da primeira publicação real.
+   */
+  function historicoDe(c) {
+    if (Array.isArray(c.historico)) return c.historico;
+    return c.mensagem ? [{ mensagem: c.mensagem, publicado_em: quando(c) }] : [];
+  }
+
+  function ultimoDe(c) {
+    const h = historicoDe(c);
+    return h[h.length - 1] || null;
+  }
+
   /** "hoje às 11:23", "ontem às 21:00", "em 18/07 às 20:01". */
   function quandoPorExtenso(iso) {
     const d = new Date(iso);
@@ -85,9 +100,9 @@
         '<span class="conversa-corpo">' +
           '<span class="conversa-linha">' +
             '<span class="conversa-nome">' + escapar(c.nome) + '</span>' +
-            '<span class="conversa-hora">' + escapar(hora(quando(c))) + '</span>' +
+            '<span class="conversa-hora">' + escapar(hora(quando(ultimoDe(c) || c))) + '</span>' +
           '</span>' +
-          '<span class="conversa-previa">' + escapar(primeiraLinha(c.mensagem)) + '</span>' +
+          '<span class="conversa-previa">' + escapar(primeiraLinha((ultimoDe(c) || {}).mensagem)) + '</span>' +
         '</span>';
       b.addEventListener('click', () => abrir(c.id));
       li.appendChild(b);
@@ -106,37 +121,48 @@
     // No lugar do horário programado ("10h e 16h"): quando este informativo
     // foi de fato atualizado — a informação que o leitor precisa para saber
     // se está vendo o dado do dia.
-    const atualizado = quandoPorExtenso(quando(c));
+    const atualizado = quandoPorExtenso(quando(ultimoDe(c) || c));
     $('#conversa-sub').textContent = atualizado ? 'atualizado ' + atualizado : 'automação';
     $('#conversa-avatar').textContent = c.inicial;
 
     const thread = $('#thread');
     thread.innerHTML = '';
 
-    if (dataLonga(quando(c))) {
-      const dia = document.createElement('div');
-      dia.className = 'dia';
-      dia.textContent = dataLonga(quando(c));
-      thread.appendChild(dia);
-    }
+    const historico = historicoDe(c);
 
-    if (c.mensagem) {
-      const balao = document.createElement('div');
-      balao.className = 'balao';
-      balao.innerHTML = marcacao(c.mensagem) +
-        '<span class="balao-rodape">' + escapar(hora(quando(c))) +
-        '<svg viewBox="0 0 16 15" width="15" height="15" aria-hidden="true">' +
-        '<path d="M10.9 3.6L5.7 10 3.4 7.7l-.8.8 3.1 3.1 6-7.2zM14.2 3.6L9 10l-.6-.6-.8.9 1.4 1.4 6-7.2z"/>' +
-        '</svg></span>';
-      thread.appendChild(balao);
-    } else {
+    if (!historico.length) {
       const aviso = document.createElement('div');
       aviso.className = 'aviso-thread';
       aviso.textContent = 'Ainda não há informativo publicado para este indicador.';
       thread.appendChild(aviso);
     }
 
-    thread.scrollTop = 0;
+    let diaAnterior = null;
+    for (const item of historico) {
+      const carimbo = quando(item);
+      const dataDoItem = dataLonga(carimbo);
+
+      // Separador só quando vira o dia, como no WhatsApp.
+      if (dataDoItem && dataDoItem !== diaAnterior) {
+        const dia = document.createElement('div');
+        dia.className = 'dia';
+        dia.textContent = dataDoItem;
+        thread.appendChild(dia);
+        diaAnterior = dataDoItem;
+      }
+
+      const balao = document.createElement('div');
+      balao.className = 'balao';
+      balao.innerHTML = marcacao(item.mensagem) +
+        '<span class="balao-rodape">' + escapar(hora(carimbo)) +
+        '<svg viewBox="0 0 16 15" width="15" height="15" aria-hidden="true">' +
+        '<path d="M10.9 3.6L5.7 10 3.4 7.7l-.8.8 3.1 3.1 6-7.2zM14.2 3.6L9 10l-.6-.6-.8.9 1.4 1.4 6-7.2z"/>' +
+        '</svg></span>';
+      thread.appendChild(balao);
+    }
+
+    // Abre no informativo mais recente, não no mais antigo.
+    thread.scrollTop = thread.scrollHeight;
     $('#tela-lista').classList.replace('tela-ativa', 'tela-atras');
     $('#tela-conversa').classList.add('tela-ativa');
   }
