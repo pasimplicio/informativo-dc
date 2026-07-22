@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Informativo diario da Diretoria Comercial da CAEMA no visual do WhatsApp",
   "scripts": {
-    "test": "node teste/sessao.mjs"
+    "test": "node teste/sessao.mjs && node teste/auditoria.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.6.1"

@@ -1,4 +1,5 @@
 import { configurado, verificar, lerCookie, COOKIE, ENV } from '../../lib/sessao.js';
+import { podeVerAuditoria } from '../../lib/auditoria.js';
 
 /**
  * Diz a tela de login se o acesso corporativo esta disponivel e se ja existe
@@ -21,5 +22,8 @@ export default async function handler(req, res) {
     configurado: pronto,
     autenticado: Boolean(sessao),
     email: sessao ? sessao.email : null,
+    // Usado só para exibir ou não o link do registro de acessos. A autorização
+    // de verdade acontece em /api/auditoria.
+    auditoria: sessao ? podeVerAuditoria(sessao.email) : false,
   });
 }

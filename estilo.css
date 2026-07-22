@@ -465,3 +465,129 @@ body {
   text-align: center;
   flex: none;
 }
+
+/* ================================================== registro de acessos == */
+
+.auditoria {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px clamp(14px, 4vw, 40px) 40px;
+}
+
+.aud-aviso {
+  max-width: 760px;
+  margin: 40px auto;
+  padding: 16px 18px;
+  border: 1px solid; border-radius: 12px;
+  font-size: 14px; line-height: 1.55;
+}
+.aud-aviso.erro { background: #fdf0ee; border-color: #e7b4ac; color: #96271a; }
+.aud-aviso[hidden] { display: none; }
+
+.aud-barra {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  max-width: 1100px; margin: 0 auto 18px;
+}
+
+.aud-resumo { display: flex; align-items: baseline; gap: 8px; }
+.aud-numero {
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 30px; font-weight: 800; letter-spacing: -.03em;
+  color: var(--pagina-texto);
+}
+.aud-rotulo { color: var(--pagina-fraco); font-size: 13px; }
+
+.aud-periodo {
+  display: flex; align-items: center; gap: 9px;
+  color: var(--pagina-fraco); font-size: 12.5px;
+}
+.aud-periodo select {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--pagina-borda); border-radius: 9px;
+  background: #fff; color: var(--pagina-texto);
+  font: inherit; font-size: 13px;
+  cursor: pointer;
+}
+.aud-periodo select:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+
+/* Tabela larga rola dentro da própria área, sem empurrar a página. */
+.aud-tabela-area {
+  max-width: 1100px; margin: 0 auto;
+  overflow-x: auto;
+  border: 1px solid var(--pagina-borda); border-radius: 12px;
+  background: rgba(255, 255, 255, .88);
+  backdrop-filter: blur(24px);
+}
+
+.aud-tabela { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+.aud-tabela th {
+  position: sticky; top: 0;
+  padding: 12px 16px;
+  background: #f4f9fc;
+  border-bottom: 1px solid var(--pagina-borda);
+  color: var(--marca-escura);
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .08em;
+  text-align: left; white-space: nowrap;
+}
+.aud-tabela td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(2, 132, 199, .09);
+  vertical-align: top;
+}
+.aud-tabela tr:last-child td { border-bottom: 0; }
+.aud-tabela tbody tr:hover { background: rgba(2, 132, 199, .04); }
+
+/* Tabular: as colunas de data não dançam entre linhas. */
+.aud-quando { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--pagina-texto); }
+.aud-conta { color: var(--pagina-texto); word-break: break-all; }
+.aud-origem { color: var(--pagina-fraco); font-size: 12.5px; }
+
+.aud-marca {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11.5px; font-weight: 700;
+  white-space: nowrap;
+}
+.aud-ok     { background: #dcf5e8; color: #12694a; }
+.aud-erro   { background: #fdecea; color: #96271a; }
+.aud-neutro { background: #eceff1; color: #4b5b68; }
+
+.aud-motivo {
+  display: block;
+  margin-top: 4px;
+  color: var(--pagina-fraco);
+  font-size: 11.5px;
+}
+
+.aud-vazio {
+  max-width: 1100px;
+  margin: 22px auto 0;
+  color: var(--pagina-fraco);
+  font-size: 13.5px; text-align: center;
+}
+.aud-vazio[hidden] { display: none; }
+
+@media (max-width: 620px) {
+  .auditoria { padding: 16px 12px 28px; }
+  .aud-tabela th, .aud-tabela td { padding: 10px 12px; }
+  /* A coluna Origem (IP) NÃO é escondida no celular: numa auditoria, ela é
+     justamente o dado que importa. A área da tabela rola na horizontal. */
+  .aud-tabela { min-width: 620px; }
+}
+
+/* IP em monoespaçada e tabular: colunas alinhadas e fácil de comparar. */
+.aud-ip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pagina-texto);
+  white-space: nowrap;
+  -webkit-user-select: all;
+  user-select: all;
+}

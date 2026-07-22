@@ -30,6 +30,13 @@
       if (s.autenticado && s.email) {
         email.textContent = s.email;
         btnSair.hidden = false;
+
+        // O link só aparece para quem pode ver. A restrição real é do
+        // servidor — isto evita mostrar uma porta que não abre.
+        if (s.auditoria) {
+          const l = document.getElementById('link-auditoria');
+          if (l) l.hidden = false;
+        }
         return;
       }
       // Sem sessão (modo demonstração): oferecer a entrada, não a saída.

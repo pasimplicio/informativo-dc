@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Registro de acessos — Informativo DC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-marca">
+    <img class="topo-logo" src="assets/logo_caema.png" alt="CAEMA">
+    <span class="topo-marca-texto">
+      <h1>Registro de acessos</h1>
+      <p>Informativo DC</p>
+    </span>
+  </div>
+
+  <div class="topo-conta">
+    <span id="topo-email" class="topo-email"></span>
+    <a class="botao-sair" href="/informativo">Voltar ao informativo</a>
+  </div>
+</header>
+
+<main class="auditoria">
+
+  <div id="aviso" class="aud-aviso" hidden></div>
+
+  <section id="conteudo" hidden>
+    <div class="aud-barra">
+      <div class="aud-resumo">
+        <span class="aud-numero" id="total">—</span>
+        <span class="aud-rotulo">registros</span>
+      </div>
+      <label class="aud-periodo">
+        Período
+        <select id="dias">
+          <option value="7">últimos 7 dias</option>
+          <option value="30" selected>últimos 30 dias</option>
+          <option value="90">últimos 90 dias</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="aud-tabela-area">
+      <table class="aud-tabela">
+        <thead>
+          <tr>
+            <th scope="col">Quando</th>
+            <th scope="col">Evento</th>
+            <th scope="col">Conta</th>
+            <th scope="col">IP</th>
+            <th scope="col">Dispositivo</th>
+          </tr>
+        </thead>
+        <tbody id="linhas"></tbody>
+      </table>
+    </div>
+
+    <p id="vazio" class="aud-vazio" hidden>Nenhum acesso registrado no período.</p>
+  </section>
+
+</main>
+
+<script src="auditoria.js"></script>
+</body>
+</html>

@@ -28,5 +28,7 @@ export default async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/informativo', '/api/mensagens'],
+  // /auditoria exige sessão aqui e, além disso, e-mail específico dentro da
+  // própria rota — o middleware só sabe que há sessão válida, não de quem.
+  matcher: ['/informativo', '/api/mensagens', '/auditoria', '/api/auditoria'],
 };

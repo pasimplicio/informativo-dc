@@ -2,6 +2,7 @@ import {
   assinar, verificar, montarCookie, lerCookie,
   ehDominioPermitido, configurado, ENV, DOMINIO_PERMITIDO, TIPO,
 } from '../../../lib/sessao.js';
+import { registrar } from '../../../lib/auditoria.js';
 
 /**
  * Volta do Google: troca o `code` por tokens, valida a identidade e emite a
@@ -10,7 +11,7 @@ import {
  */
 export default async function handler(req, res) {
   if (!configurado(process.env)) {
-    return recusar(res, 'indisponivel');
+    return recusar(res, 'indisponivel', req);
   }
 
   const segredo = process.env[ENV.segredoSessao];
@@ -18,16 +19,16 @@ export default async function handler(req, res) {
   // O Google devolve erro quando o usuario cancela ou a conta e barrada pela
   // tela de consentimento Interna.
   if (req.query.error) {
-    return recusar(res, req.query.error === 'access_denied' ? 'cancelado' : 'google');
+    return recusar(res, req.query.error === 'access_denied' ? 'cancelado' : 'google', req);
   }
 
   // 1. O state precisa ser autentico E igual ao que guardamos no cookie.
   const state = req.query.state;
   const salvo = lerCookie(req.headers.cookie, 'oauth_state');
-  if (!state || !salvo || state !== salvo) return recusar(res, 'estado');
+  if (!state || !salvo || state !== salvo) return recusar(res, 'estado', req);
 
   const dadosState = await verificarState(state, segredo);
-  if (!dadosState) return recusar(res, 'estado');
+  if (!dadosState) return recusar(res, 'estado', req);
 
   // 2. Troca do codigo por tokens (server-to-server, sobre TLS).
   let tokens;
@@ -46,29 +47,29 @@ export default async function handler(req, res) {
     tokens = await r.json();
     if (!r.ok || !tokens.id_token) throw new Error(tokens.error || 'sem id_token');
   } catch (e) {
-    return recusar(res, 'troca');
+    return recusar(res, 'troca', req);
   }
 
   // 3. O id_token veio direto do endpoint de token do Google sobre TLS
   //    autenticado, entao a assinatura ja esta garantida pelo canal. Ainda
   //    assim validamos as claims, que e o que de fato autoriza o acesso.
   const id = decodificarJWT(tokens.id_token);
-  if (!id) return recusar(res, 'token');
+  if (!id) return recusar(res, 'token', req);
 
   const agora = Math.floor(Date.now() / 1000);
   const emissorOk = id.iss === 'https://accounts.google.com' || id.iss === 'accounts.google.com';
 
-  if (!emissorOk) return recusar(res, 'token');
-  if (id.aud !== process.env[ENV.clientId]) return recusar(res, 'token');
-  if (!id.exp || id.exp < agora) return recusar(res, 'token');
+  if (!emissorOk) return recusar(res, 'token', req);
+  if (id.aud !== process.env[ENV.clientId]) return recusar(res, 'token', req, id.email);
+  if (!id.exp || id.exp < agora) return recusar(res, 'token', req, id.email);
 
   // 4. Autorizacao. email_verified evita conta com e-mail nao confirmado; a
   //    checagem de dominio e a barreira que nao depende do parametro `hd`.
   if (id.email_verified !== true && id.email_verified !== 'true') {
-    return recusar(res, 'email');
+    return recusar(res, 'email', req, id.email);
   }
   if (!ehDominioPermitido(id.email)) {
-    return recusar(res, 'dominio');
+    return recusar(res, 'dominio', req, id.email);
   }
 
   const sessao = await assinar(
@@ -76,6 +77,8 @@ export default async function handler(req, res) {
     segredo,
     TIPO.sessao
   );
+
+  await registrar({ evento: 'entrada', email: String(id.email).toLowerCase() }, req);
 
   res.setHeader('Set-Cookie', [
     montarCookie(sessao),
@@ -101,8 +104,16 @@ function decodificarJWT(jwt) {
   }
 }
 
-/** Volta para a tela de entrada com um motivo legivel, sem vazar detalhe tecnico. */
-function recusar(res, motivo) {
+/**
+ * Volta para a tela de entrada com um motivo legivel, sem vazar detalhe
+ * tecnico, e registra a recusa na auditoria.
+ *
+ * `req` e `email` sao opcionais: nas falhas anteriores a identificacao do
+ * usuario (state invalido, troca de token) ainda nao sabemos quem tentou.
+ */
+async function recusar(res, motivo, req, email) {
+  await registrar({ evento: 'recusado', email: email || null, motivo }, req);
+
   res.setHeader('Set-Cookie', ['oauth_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0']);
   res.setHeader('Cache-Control', 'no-store');
   res.redirect(302, '/?erro=' + encodeURIComponent(motivo));
