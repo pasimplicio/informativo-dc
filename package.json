@@ -6,5 +6,8 @@
   "description": "Informativo diario da Diretoria Comercial da CAEMA no visual do WhatsApp",
   "scripts": {
     "test": "node teste/sessao.mjs"
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.27.0"
   }
 }

@@ -120,12 +120,31 @@
 
   /* -------------------------------------------------------------- carga --- */
 
+  /**
+   * Tenta os informativos reais publicados pelo n8n; se ainda não houver
+   * nenhum (ou a rota falhar), cai no arquivo de exemplo. Assim a tela nunca
+   * fica vazia, e o selo do cabeçalho deixa claro qual dos dois está no ar.
+   */
+  async function buscarDados() {
+    try {
+      const r = await fetch('/api/mensagens', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        if (Array.isArray(j.contatos) && j.contatos.length) return j;
+      }
+    } catch (e) {
+      // Segue para o exemplo.
+    }
+
+    const r = await fetch('dados/mensagens.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }
+
   async function carregar() {
     let dados;
     try {
-      const r = await fetch('dados/mensagens.json', { cache: 'no-store' });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      dados = await r.json();
+      dados = await buscarDados();
     } catch (e) {
       $('#lista-conversas').innerHTML =
         '<li><div class="aviso-thread">Não foi possível carregar os informativos.</div></li>';
