@@ -25,9 +25,29 @@ export default async function handler(req, res) {
   }
 
   const cabecalho = String(req.headers.authorization || '');
-  const enviado = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7).trim() : '';
+
+  // Erros distintos: "sem cabeçalho", "sem o prefixo Bearer" e "token errado"
+  // exigem correções diferentes, e um 401 genérico obrigaria a adivinhar qual.
+  if (!cabecalho) {
+    return res.status(401).json({
+      erro: 'Cabeçalho Authorization ausente.',
+      dica: 'No n8n: credencial Header Auth com Name="Authorization".',
+    });
+  }
+  if (!cabecalho.startsWith('Bearer ')) {
+    return res.status(401).json({
+      erro: 'Cabeçalho Authorization sem o prefixo "Bearer ".',
+      dica: 'O Value da credencial deve ser: Bearer SEU_TOKEN (com espaço).',
+      recebido: cabecalho.slice(0, 12) + '…',
+    });
+  }
+
+  const enviado = cabecalho.slice(7).trim();
   if (!segredosIguais(enviado, esperado)) {
-    return res.status(401).json({ erro: 'Token inválido.' });
+    return res.status(401).json({
+      erro: 'Token inválido.',
+      dica: 'O token do Value não é o INFORMATIVO_TOKEN cadastrado na Vercel.',
+    });
   }
 
   const corpo = req.body && typeof req.body === 'object' ? req.body : {};
