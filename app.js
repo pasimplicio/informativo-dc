@@ -39,6 +39,15 @@
     return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
   }
 
+  /**
+   * Horário mostrado no balão e na lista = quando o informativo foi publicado.
+   * gerado_em pode vir como data sem hora (ex.: '2026-07-21'), que o navegador
+   * lê como meia-noite UTC e exibe como 21:00 do dia anterior no Brasil.
+   */
+  function quando(c) {
+    return c.publicado_em || c.gerado_em;
+  }
+
   function primeiraLinha(msg) {
     return String(msg || '').replace(/[*_~`]/g, '').split('\n').filter(Boolean)[0] || '';
   }
@@ -59,7 +68,7 @@
         '<span class="conversa-corpo">' +
           '<span class="conversa-linha">' +
             '<span class="conversa-nome">' + escapar(c.nome) + '</span>' +
-            '<span class="conversa-hora">' + escapar(hora(c.gerado_em)) + '</span>' +
+            '<span class="conversa-hora">' + escapar(hora(quando(c))) + '</span>' +
           '</span>' +
           '<span class="conversa-previa">' + escapar(primeiraLinha(c.mensagem)) + '</span>' +
         '</span>';
@@ -83,10 +92,10 @@
     const thread = $('#thread');
     thread.innerHTML = '';
 
-    if (dataLonga(c.gerado_em)) {
+    if (dataLonga(quando(c))) {
       const dia = document.createElement('div');
       dia.className = 'dia';
-      dia.textContent = dataLonga(c.gerado_em);
+      dia.textContent = dataLonga(quando(c));
       thread.appendChild(dia);
     }
 
@@ -94,7 +103,7 @@
       const balao = document.createElement('div');
       balao.className = 'balao';
       balao.innerHTML = marcacao(c.mensagem) +
-        '<span class="balao-rodape">' + escapar(hora(c.gerado_em)) +
+        '<span class="balao-rodape">' + escapar(hora(quando(c))) +
         '<svg viewBox="0 0 16 15" width="15" height="15" aria-hidden="true">' +
         '<path d="M10.9 3.6L5.7 10 3.4 7.7l-.8.8 3.1 3.1 6-7.2zM14.2 3.6L9 10l-.6-.6-.8.9 1.4 1.4 6-7.2z"/>' +
         '</svg></span>';
@@ -157,10 +166,9 @@
     // fictícios de passarem por reais.
     if (dados.exemplo) $('#selo-exemplo').hidden = false;
 
-    const quando = dados.atualizado_em
+    $('#atualizado').textContent = dados.atualizado_em
       ? 'Atualizado em ' + dataLonga(dados.atualizado_em) + ' às ' + hora(dados.atualizado_em)
       : '';
-    $('#atualizado').textContent = quando;
 
     pintarLista();
 

@@ -153,9 +153,11 @@ function montar(def) {
       sendBody: true,
       contentType: 'json',
       specifyBody: 'json',
-      jsonBody:
-        '={{ { contato: ' + JSON.stringify(def.contato) +
-        ', mensagem: $json.mensagem, gerado_em: $json.data_posicao } }}',
+      // Sem gerado_em: data_posicao e a data de REFERENCIA do dado, sem hora.
+      // Usada como carimbo, o navegador a lia como meia-noite UTC e exibia
+      // 21:00 do dia anterior. O horario correto e o da publicacao, que o
+      // servidor grava sozinho em publicado_em.
+      jsonBody: '={{ { contato: ' + JSON.stringify(def.contato) + ', mensagem: $json.mensagem } }}',
       options: { timeout: 30000 },
     },
     id: 'Publicar no Informativo DC',
