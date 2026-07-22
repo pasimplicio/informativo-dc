@@ -1,4 +1,4 @@
-import { podeVerAuditoria, emailAuditor } from '../lib/auditoria.js';
+import { podeVerAuditoria, emailAuditor } from '../lib/permissoes.js';
 
 let falhas = 0;
 const ok = (nome, cond) => {

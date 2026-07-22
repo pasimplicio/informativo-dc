@@ -1,4 +1,5 @@
 import { verificar, lerCookie, configurado, COOKIE, ENV } from './lib/sessao.js';
+import { podeVerAuditoria, ehRotaDeAuditoria } from './lib/permissoes.js';
 
 /**
  * Protege o informativo. Roda no Edge, antes de servir o arquivo.
@@ -17,9 +18,20 @@ export default async function middleware(req) {
     process.env[ENV.segredoSessao]
   );
 
-  if (sessao) return;
-
   const url = new URL(req.url);
+
+  if (sessao) {
+    // Sessão válida não basta para a auditoria: qualquer conta do domínio tem
+    // sessão. Sem esta checagem, outro funcionário carregava a página (sem
+    // dados, barrados pela rota) -- mas carregava.
+    if (ehRotaDeAuditoria(url.pathname) && !podeVerAuditoria(sessao.email)) {
+      return url.pathname.startsWith('/api/')
+        ? Response.json({ erro: 'Acesso restrito.' }, { status: 403 })
+        : Response.redirect(new URL('/informativo?erro=restrito', url.origin).toString(), 302);
+    }
+    return;
+  }
+
   const entrada = new URL('/', url.origin);
   entrada.searchParams.set('next', url.pathname + url.search);
   entrada.searchParams.set('erro', 'sessao');
