@@ -44,12 +44,19 @@ $token = $env:INFORMATIVO_TOKEN
 
 if ([string]::IsNullOrWhiteSpace($token)) {
     Write-Host ""
-    Write-Host "Cole o INFORMATIVO_TOKEN (nao aparece na tela):" -ForegroundColor Cyan
-    $seguro = Read-Host -AsSecureString
+    Write-Host "  NAO edite este arquivo para colar o token." -ForegroundColor Yellow
+    Write-Host "  Ele vai para o GitHub, que e publico." -ForegroundColor Yellow
+    Write-Host ""
+
+    # Prompt na propria chamada: com Write-Host separado, a linha do Read-Host
+    # aparece sozinha e ja levou a colar o token dentro do script.
+    $seguro = Read-Host -Prompt "  Cole o INFORMATIVO_TOKEN aqui no terminal e tecle Enter" -AsSecureString
+
     $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro)
     try {
         $token = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)
-    } finally {
+    }
+    finally {
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
     }
 }
@@ -106,7 +113,8 @@ catch {
             $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream())
             $detalhe = $sr.ReadToEnd()
             $sr.Close()
-        } catch { }
+        }
+        catch { }
     }
 
     Write-Host "FALHOU" -ForegroundColor Red
