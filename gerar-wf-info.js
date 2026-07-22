@@ -32,6 +32,12 @@ const SITE = 'https://informativo-dc.sistemaspsdev.com.br';
 /** Numero de teste, o mesmo ja usado nos originais. */
 const NUMERO_TESTE = '5598984312703';
 
+/** Grupos oficiais, os mesmos que os workflows originais ja usam. */
+const GRUPOS_OFICIAIS = [
+  '559891485530-1606501662@g.us',
+  '120363369397773589@g.us',
+];
+
 const DEFINICOES = {
   wf1: {
     saida: 'WF1-INFO - Arrecadacao (alimenta o informativo).json',
@@ -78,6 +84,8 @@ const DEFINICOES = {
     noMontar: 'Montar alerta faturamento',
     noEnvioAntigo: 'Enviar alerta WhatsApp Faturamento',
     id: 'WF4InfoCaema',
+    // Ver configuracaoSoTeste(): o WF4 nunca enviou aos grupos.
+    grupos: false,
   },
 };
 
@@ -96,16 +104,29 @@ function exigirNo(w, nome) {
  * Configuracao com destinatarios limitados ao numero de teste.
  * Os grupos oficiais entram depois da validacao, trocando a lista.
  */
-function configuracaoSoTeste() {
+function configuracaoSoTeste(def) {
+  const paraGrupos = def.grupos !== false;
+
+  const cabecalho = paraGrupos
+    ? [
+        '// COPIA -INFO: avisa nos grupos oficiais, os mesmos do workflow original.',
+        '// O que vai ao WhatsApp e apenas o aviso curto com o link; o relatorio',
+        '// inteiro fica no informativo.',
+      ]
+    : [
+        '// COPIA -INFO: destinatario limitado ao numero de teste.',
+        '//',
+        '// O WF4 nunca enviou aos grupos -- o original vive com ativo:false,',
+        '// aguardando aprovacao do texto. Colocar os grupos aqui estrearia esse',
+        '// envio. Para liberar, troque a lista pelos grupos e reimporte.',
+      ];
+
   return [
-    '// COPIA -INFO: destinatarios limitados ao numero de teste.',
-    '// Os grupos oficiais so entram depois da validacao -- trocar a lista abaixo.',
+    ...cabecalho,
     '//',
-    '// ativo:true porque esta copia existe para alimentar o informativo; o',
-    '// controle de "enviar ou nao" deixou de ser necessario aqui, ja que o que',
-    '// vai ao WhatsApp agora e so um aviso curto.',
+    '// ativo:true porque esta copia existe para alimentar o informativo.',
     'const destinatarios = [',
-    "  '" + NUMERO_TESTE + "',",
+    ...(paraGrupos ? GRUPOS_OFICIAIS : [NUMERO_TESTE]).map(d => "  '" + d + "',"),
     '];',
     '',
     'return [{',
@@ -176,7 +197,7 @@ function montar(def) {
   delete w.connections[def.noEnvioAntigo];
 
   // 2. Destinatarios so de teste.
-  noConfig.parameters.jsCode = configuracaoSoTeste();
+  noConfig.parameters.jsCode = configuracaoSoTeste(def);
 
   // 3. Nos novos.
   w.nodes.push({
@@ -266,5 +287,5 @@ console.log('Gerado: portal/' + def.saida);
 console.log('  nos          : ' + wf.nodes.length + ' (original: ' + origem.nodes.length + ')');
 console.log('  removido     : ' + def.noEnvioAntigo);
 console.log('  adicionados  : Publicar no Informativo DC, Montar aviso curto, Enviar aviso WhatsApp');
-console.log('  destinatario : ' + NUMERO_TESTE + ' (somente teste)');
+console.log('  destinatarios: ' + (def.grupos === false ? NUMERO_TESTE + ' (somente teste)' : GRUPOS_OFICIAIS.join(', ')));
 console.log('  ativo        : ' + wf.active);
