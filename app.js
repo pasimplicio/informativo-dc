@@ -48,6 +48,23 @@
     return c.publicado_em || c.gerado_em;
   }
 
+  /** "hoje às 11:23", "ontem às 21:00", "em 18/07 às 20:01". */
+  function quandoPorExtenso(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return '';
+
+    const dia = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const hoje = new Date();
+    const zero = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const dias = Math.round((zero - dia) / 86400000);
+
+    const rotulo = dias === 0 ? 'hoje'
+      : dias === 1 ? 'ontem'
+      : 'em ' + String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+
+    return rotulo + ' às ' + hora(iso);
+  }
+
   function primeiraLinha(msg) {
     return String(msg || '').replace(/[*_~`]/g, '').split('\n').filter(Boolean)[0] || '';
   }
@@ -86,7 +103,11 @@
     if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
 
     $('#conversa-nome').textContent = c.nome;
-    $('#conversa-sub').textContent = c.horarios ? 'automação · ' + c.horarios : 'automação';
+    // No lugar do horário programado ("10h e 16h"): quando este informativo
+    // foi de fato atualizado — a informação que o leitor precisa para saber
+    // se está vendo o dado do dia.
+    const atualizado = quandoPorExtenso(quando(c));
+    $('#conversa-sub').textContent = atualizado ? 'atualizado ' + atualizado : 'automação';
     $('#conversa-avatar').textContent = c.inicial;
 
     const thread = $('#thread');
