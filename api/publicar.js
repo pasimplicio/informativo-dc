@@ -1,4 +1,4 @@
-import { publicar, contatoValido, segredosIguais, TAMANHO_MAX, CONTATOS }
+import { publicar, apagar, contatoValido, segredosIguais, TAMANHO_MAX, CONTATOS }
   from '../lib/informativos.js';
 
 /**
@@ -37,6 +37,16 @@ export default async function handler(req, res) {
       erro: 'Campo "contato" inválido.',
       aceitos: CONTATOS.map(c => c.id),
     });
+  }
+
+  // limpar:true remove a publicação e devolve a tela ao arquivo de exemplo.
+  if (corpo.limpar === true) {
+    try {
+      await apagar(corpo.contato);
+    } catch (e) {
+      return res.status(500).json({ erro: 'Falha ao apagar: ' + e.message });
+    }
+    return res.status(200).json({ ok: true, contato: corpo.contato, apagado: true });
   }
 
   const mensagem = typeof corpo.mensagem === 'string' ? corpo.mensagem.trim() : '';
