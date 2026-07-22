@@ -44,6 +44,41 @@ const DEFINICOES = {
     noEnvioAntigo: 'Enviar alerta WhatsApp Arrecadacao',
     id: 'WF1InfoCaema',
   },
+  wf2: {
+    saida: 'WF2-INFO - Ordens de Servico (alimenta o informativo).json',
+    nome: 'WF2-INFO - Ordens de Servico SLA 72h',
+    // Existem tres arquivos WF2 no repositorio; este e o que o CLAUDE.md
+    // documenta como o WF2 em producao (id DbJSlCZZIWl6zVGB).
+    origem: 'WF2 - Ordens de Servico - SLA 72h - CORRIGIDO.json',
+    contato: 'ordens',
+    rotulo: 'ORDENS DE SERVIÇO',
+    noConfig: 'Configurar alertas WhatsApp',
+    noMontar: 'Montar alerta gerencial',
+    noEnvioAntigo: 'Enviar alerta WhatsApp',
+    id: 'WF2InfoCaema',
+  },
+  wf3: {
+    saida: 'WF3-INFO - Cortes (alimenta o informativo).json',
+    nome: 'WF3-INFO - Acompanhamento de Cortes',
+    origem: 'WF3 - Acompanhamento de Cortes - Diario 21h.json',
+    contato: 'cortes',
+    rotulo: 'CORTES',
+    noConfig: 'Configurar alerta WhatsApp Cortes',
+    noMontar: 'Montar alerta cortes',
+    noEnvioAntigo: 'Enviar alerta WhatsApp Cortes',
+    id: 'WF3InfoCaema',
+  },
+  wf4: {
+    saida: 'WF4-INFO - Faturamento (alimenta o informativo).json',
+    nome: 'WF4-INFO - Faturamento e Pagamentos',
+    origem: 'WF4 - Faturamento e Pagamentos - Diario 21h.json',
+    contato: 'faturamento',
+    rotulo: 'FATURAMENTO',
+    noConfig: 'Configurar alerta WhatsApp Faturamento',
+    noMontar: 'Montar alerta faturamento',
+    noEnvioAntigo: 'Enviar alerta WhatsApp Faturamento',
+    id: 'WF4InfoCaema',
+  },
 };
 
 function lerOrigem(arquivo) {
