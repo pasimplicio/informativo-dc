@@ -32,6 +32,15 @@ const SITE = 'https://informativo-dc.sistemaspsdev.com.br';
 /** Numero de teste, o mesmo ja usado nos originais. */
 const NUMERO_TESTE = '5598984312703';
 
+/**
+ * Credencial Header Auth do informativo (Authorization: Bearer <token>).
+ *
+ * Precisa estar no JSON: o import SOBRESCREVE o no inteiro, entao vincular a
+ * credencial pela interface se perde na proxima reimportacao -- foi o que
+ * derrubou as execucoes agendadas de 22/07 com "Credentials not found".
+ */
+const CRED_INFORMATIVO = { httpHeaderAuth: { id: 'T0l6OL0Cro3viyYe', name: 'Informativo DC' } };
+
 /** Grupos oficiais, os mesmos que os workflows originais ja usam. */
 const GRUPOS_OFICIAIS = [
   '559891485530-1606501662@g.us',
@@ -223,6 +232,7 @@ function montar(def) {
     position: [base[0], base[1]],
     // "Montar alerta" devolve um item por destinatario; publicar uma vez basta.
     executeOnce: true,
+    credentials: CRED_INFORMATIVO,
   });
 
   w.nodes.push({
