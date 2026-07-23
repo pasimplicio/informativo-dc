@@ -71,6 +71,9 @@ const DEFINICOES = {
     noMontar: 'Montar alerta gerencial',
     noEnvioAntigo: 'Enviar alerta WhatsApp',
     id: 'WF2InfoCaema',
+    // Noturno: publica no site e avisa so o teste. O anuncio aos grupos e feito
+    // uma vez, de manha, pelo WF-SERVICOS-8H.
+    grupos: false,
   },
   wf3: {
     saida: 'WF3-INFO - Cortes (alimenta o informativo).json',
@@ -82,6 +85,8 @@ const DEFINICOES = {
     noMontar: 'Montar alerta cortes',
     noEnvioAntigo: 'Enviar alerta WhatsApp Cortes',
     id: 'WF3InfoCaema',
+    // Noturno: publica no site e avisa so o teste; grupos so pelo WF-SERVICOS-8H.
+    grupos: false,
   },
   wf4: {
     saida: 'WF4-INFO - Faturamento (alimenta o informativo).json',
@@ -94,6 +99,20 @@ const DEFINICOES = {
     noEnvioAntigo: 'Enviar alerta WhatsApp Faturamento',
     id: 'WF4InfoCaema',
     // Ver configuracaoSoTeste(): o WF4 nunca enviou aos grupos.
+    grupos: false,
+  },
+  wf5: {
+    saida: 'WF5-INFO - Hidrometracao (alimenta o informativo).json',
+    nome: 'WF5-INFO - Hidrometracao Diario',
+    origem: 'WF5 - Hidrometracao Diario.json',
+    contato: 'hidrometracao',
+    rotulo: 'HIDROMETRAÇÃO',
+    noConfig: 'Configurar alerta WhatsApp Hidrometracao',
+    noMontar: 'Montar alerta hidrometracao',
+    noEnvioAntigo: 'Enviar alerta WhatsApp Hidrometracao',
+    id: 'WF5InfoCaema',
+    // Noturno (19h30): publica no site e avisa so o teste; grupos so pelo
+    // WF-SERVICOS-8H, que anuncia Ordens, Cortes e Hidrometracao juntos.
     grupos: false,
   },
 };
@@ -164,7 +183,9 @@ function codigoAviso(def) {
     '}',
     '',
     'const dia = formatarDia(alerta.data_posicao);',
-    'const link = ' + JSON.stringify(SITE + '/informativo#' + def.contato) + ';',
+    // Link so da landing (raiz), sem #contato: os grupos entram pela porta da
+    // frente do informativo, nao numa conversa especifica.
+    'const link = ' + JSON.stringify(SITE) + ';',
     '',
     'const texto = [',
     "  '📊 *INFORMATIVO DE " + def.rotulo + "*' + (dia ? ' | POSIÇÃO ' + dia : ''),",
