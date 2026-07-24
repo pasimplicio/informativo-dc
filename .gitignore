@@ -4,6 +4,12 @@
 dados/mensagens.local.json
 dados/*.local.json
 
+# Nada de credencial/anotacao solta em dados/. O repositorio e PUBLICO e a
+# regra acima so cobria *.local.json -- um `git add -A` distraido publicaria
+# qualquer outro arquivo deixado ali.
+dados/credenciais*
+dados/*.txt
+
 # Saidas antigas do gerador (formato anterior)
 mensageiros.gen.js
 snapshot.gen.js
