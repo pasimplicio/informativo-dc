@@ -100,6 +100,12 @@ const DEFINICOES = {
     id: 'WF4InfoCaema',
     // Ver configuracaoSoTeste(): o WF4 nunca enviou aos grupos.
     grupos: false,
+    // BLOQUEADO de proposito. A mensagem do WF4-INFO passou a ser mantida
+    // DIRETO no workflow (o "Montar alerta faturamento" do WF4-INFO diverge do
+    // original). Regenerar aqui clonaria o original de novo e apagaria essa
+    // mensagem sem aviso. Para reativar, primeiro traga a mensagem do
+    // WF4-INFO para o WF4 original e so entao remova este campo.
+    bloqueado: 'A mensagem do WF4-INFO e mantida direto no workflow; regenerar apagaria a versao boa.',
   },
   wf5: {
     saida: 'WF5-INFO - Hidrometracao (alimenta o informativo).json',
@@ -307,6 +313,15 @@ const def = DEFINICOES[alvo];
 
 if (!def) {
   console.error('Uso: node informativodc/gerar-wf-info.js <' + Object.keys(DEFINICOES).join('|') + '>');
+  process.exit(1);
+}
+
+// Guarda: alvo cuja copia -INFO deixou de ser derivada do original. Regenerar
+// sobrescreveria trabalho que so existe na copia.
+if (def.bloqueado) {
+  console.error('BLOQUEADO: ' + alvo + ' nao pode ser regenerado.');
+  console.error('  Motivo: ' + def.bloqueado);
+  console.error('  Edite o workflow -INFO diretamente e reimporte no n8n.');
   process.exit(1);
 }
 
